@@ -2,127 +2,111 @@
 <html>
 <head>
 
-<link rel="stylesheet" type="text/css" href="application.css">
+<link rel="stylesheet" type="text/css" href="css/application.css">
 <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-
 <script type="text/javascript">
-    window.$ = window.jQuery = require(__dirname+'/jquery-1.11.3.min.js');
-</script>
-
-<script type="text/javascript">window.nRequire = require</script>
-
-<script>
-
-var opensubtitles = nRequire("subtitler");
-var zlib = require('zlib');
-var http = require('http');
-var fs = require('fs');
-var path = require("path")
-var url = require("url");
-var gUrl = "http://dl.opensubtitles.org/en/download/filead/src-api/vrf-19dc0c5e/sid-651bm29a5qjjt3bo21l7868lp2/1954774457.gz"
-
-var token = null;
-opensubtitles.api.login().then(function(t){
-  token = t;
-});
-
-function allowDrop(event) {
-  event.preventDefault();
-};
-
-function drop(ev) {
-    loading();
-    ev.preventDefault();
-    var file = ev.dataTransfer.files[0]
-    var search = path.parse(file.name).name;
-    opensubtitles.api.searchForTitle(token, "eng", search).then(function(results){
-      if(!results[0]) { return no(); }
-      if(results[0]){
-        var downloadUrl = results[0].SubDownloadLink
-        var p = path.dirname(file.path)
-        var u = url.parse(downloadUrl);
-        var request = http.get({ 
-            host: u.host,
-            path: u.path,
-            port: 80
-        });
-        request.on('response', function(response) {
-          var output = fs.createWriteStream(p + "/" + results[0].SubFileName);
-          response.pipe(zlib.createGunzip()).pipe(output);
-        });
-
-        ok();
-      }
-    });
-}
-
-var $loading, $ok, $no, clearOk, clearNo, $info;
-
-var clear = function() {
-  clearInterval(clearOk);
-  clearInterval(clearNo);
-};
-
-var loading = function() {
-  clear();
-  $info.hide();
-  $loading.show();
-  $ok.hide();
-  $no.hide();
-};
-
-var ok = function() {
-  clear();
-  $info.hide();
-  $loading.hide();
-  $ok.show();
-  $no.hide();
-  clearOk = setTimeout(function() {
-    $ok.hide();
-    $info.show();
-  }, 5000);
-};
-
-var no = function() {
-  clear();
-  $info.hide();
-  $loading.hide();
-  $ok.hide();
-  $no.show();
-  clearNo = setTimeout(function() {
-    $no.hide();
-    $info.show();
-  }, 5000);
-};
+  window.$ = window.jQuery = require(__dirname + "/jquery-1.11.3.min.js");
 </script>
 
 <script type="text/javascript">
-  
-  $(function() {
-    $loading = $("#loading");
-    $ok = $("#ok");
-    $no = $("#no");
-    $info = $("#info");
+  var opensubtitles = require("subtitler");
+  var zlib = require('zlib');
+  var http = require('http');
+  var fs = require('fs');
+  var path = require("path")
+  var url = require("url");
+
+  var token = null;
+  opensubtitles.api.login().then(function(t){
+    token = t;
   });
 
+  function allowDrop(event) {
+    event.preventDefault();
+  };
 
+  function drop(ev) {
+      loading();
+      ev.preventDefault();
+      var file = ev.dataTransfer.files[0]
+      var search = path.parse(file.name).name;
+      opensubtitles.api.searchForTitle(token, "eng", search).then(function(results){
+        if(!results[0]) { return no(); }
+        if(results[0]){
+          var downloadUrl = results[0].SubDownloadLink
+          var p = path.dirname(file.path)
+          var u = url.parse(downloadUrl);
+          var request = http.get({ 
+              host: u.host,
+              path: u.path,
+              port: 80
+          });
+          request.on('response', function(response) {
+            var output = fs.createWriteStream(p + "/" + results[0].SubFileName);
+            response.pipe(zlib.createGunzip()).pipe(output);
+          });
 
+          ok();
+        }
+      });
+  }
+
+  var $loading, $ok, $no, clearOk, clearNo, $info;
+
+  var clear = function() {
+    clearInterval(clearOk);
+    clearInterval(clearNo);
+  };
+
+  var loading = function() {
+    clear();
+    $info.hide();
+    $loading.show();
+    $ok.hide();
+    $no.hide();
+  };
+
+  var ok = function() {
+    clear();
+    $info.hide();
+    $loading.hide();
+    $ok.show();
+    $no.hide();
+    clearOk = setTimeout(function() {
+      $ok.hide();
+      $info.show();
+    }, 5000);
+  };
+
+  var no = function() {
+    clear();
+    $info.hide();
+    $loading.hide();
+    $ok.hide();
+    $no.show();
+    clearNo = setTimeout(function() {
+      $no.hide();
+      $info.show();
+    }, 5000);
+  };
+
+  $(function() {
+    $loading = $("#loading").hide();
+    $ok = $("#ok").hide();
+    $no = $("#no").hide();
+    $info = $("#info");
+  });
 </script>
 
-<style type="text/css">
-  .hidden {
-    display: none;
-  }
-</style>
 </head>
 <body>
 
 <div id="upload" ondrop="drop(event)" ondragover="allowDrop(event)">
   <div id="drop">
     <div style="font-size: 25px; margin-bottom: 24px; margin-top: 24px;" id="info">Drop Here</div>
-    <i id="ok" class="hidden fa fa-check fa-5x"></i>
-    <i id="no" class="hidden fa fa-times fa-5x"></i>
-    <i id="loading" class="spin hidden fa fa-spinner fa-5x"></i>
+    <i id="ok" class="fa fa-check fa-5x"></i>
+    <i id="no" class="fa fa-times fa-5x"></i>
+    <i id="loading" class="spin fa fa-spinner fa-5x"></i>
   </div>
 </div>
 

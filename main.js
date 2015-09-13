@@ -4,13 +4,15 @@ var Menu          = require("menu");
 
 app.on("ready", function() {
   var mainWindow = new BrowserWindow({
-    resizable: false,
+    resizable: true,
     height: 280,
     width: 310,
     "web-preferences": {
       "web-security": false
     }
   });
+
+  mainWindow.maximize();
 
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
@@ -27,8 +29,13 @@ app.on("ready", function() {
           selector: 'orderFrontStandardAboutPanel:'
         }
       ]
-    }
+    },
+    {
+      label: 'Quit',
+      accelerator: 'Command+Q',
+      click: function() { app.quit(); }
+    },
   ]
   menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  // Menu.setApplicationMenu(menu);
 });
