@@ -1,0 +1,32 @@
+{
+  "name": "never-again",
+  "version": "0.0.0",
+  "description": "Small description for never-again goes here",
+  "main": "main.js",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "repository": "",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron-packager": "*",
+    "electron-prebuilt": "*",
+    "ember-cli": "*"
+  },
+  "window": {
+    "width": 960,
+    "height": 600
+  },
+  "dependencies": {
+    "download-file": "^0.1.5",
+    "electron-packager": "^4.0.0",
+    "request": "^2.61.0",
+    "subtitler": "^2.4.0",
+    "tar-pack": "^2.0.0"
+  }
+}

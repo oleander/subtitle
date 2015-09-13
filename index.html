@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">window.nRequire = require</script>
+
+<script>
+
+var opensubtitles = nRequire("subtitler");
+var download = nRequire('download-file')
+var AdmZip = nRequire('adm-zip');
+
+var path = "/Users/linus/Downloads/Suits.S05E08.HDTV.x264-KILLERS\[ettv\]/1954850326.gz";
+var d = "/Users/linus/Downloads/Suits.S05E08.HDTV.x264-KILLERS\[ettv\]/";
+
+
+
+var gUrl = "http://dl.opensubtitles.org/en/download/filead/src-api/vrf-19dc0c5e/sid-651bm29a5qjjt3bo21l7868lp2/1954774457.gz"
+
+console.info(require("url").parse(gUrl))
+// var zlib = require('zlib');
+// var http = require('http');
+// var fs = require('fs');
+// var request = http.get({ host: ',
+//                          path: '/en/download/filead/src-api/vrf-19dc0c5e/sid-651bm29a5qjjt3bo21l7868lp2/1954774457.gz',
+//                          port: 80
+//                          // headers: { 'accept-encoding': 'gzip,deflate' } 
+//                       });
+// request.on('response', function(response) {
+//   var output = fs.createWriteStream(SubFileName);
+//   response.pipe(zlib.createGunzip()).pipe(output);
+// });
+
+// var zip = new AdmZip(path);
+//  var zipEntries = zip.getEntries(); // an array of ZipEntry records
+//  zipEntries.forEach(function(zipEntry) {
+//      console.log(zipEntry.toString()); // outputs zip entries information
+//      // if (zipEntry.entryName == "my_file.txt") {
+//      //      console.log(zipEntry.data.toString('utf8')); 
+//      // }
+//  });
+
+
+// var read = require('fs').createReadStream
+// var unpack = require('tar-pack').unpack
+// read(path)
+//   .pipe(unpack(d, function (err) {
+//     if (err) console.error(err.stack)
+//     else console.log('done')
+//   }))
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+
+var token = null;
+opensubtitles.api.login().then(function(t){
+  token = t;
+});
+
+
+function drop(ev) {
+    ev.preventDefault();
+    var file = ev.dataTransfer.files[0]
+    console.info(file.name);
+    console.info(file.path);
+
+    var search = require("path").parse(file.name).name;
+    console.info("search for", search)
+    opensubtitles.api.searchForTitle(token, "eng", search).then(function(results){
+      console.info("search", results.length);
+      if(!results[0]) {
+        results[0] = {
+          SubDownloadLink: gUrl,
+          SubFileName: "hello.srt"
+        }
+      }
+      if(results[0]){
+        console.info("IN!")
+        console.info( results[0])
+        var url = results[0].SubDownloadLink
+
+        request = nRequire("request");
+        console.info("downloading", url);
+        var g = request(url)
+        var p = nRequire("path").dirname(file.path)
+
+        console.info("save to", p + "/" + results[0].SubFileName);
+
+
+        var u = require("url").parse(url);
+
+
+        var zlib = require('zlib');
+        var http = require('http');
+        var fs = require('fs');
+        var request = http.get({ 
+            host: u.host,
+            path: u.path,
+            port: 80
+        });
+        request.on('response', function(response) {
+          var output = fs.createWriteStream(p + "/" + results[0].SubFileName);
+          response.pipe(zlib.createGunzip()).pipe(output);
+        });
+
+
+
+
+        var output = fs.createWriteStream("/tmp" + "/" + results[0].SubFileName);
+
+        g.pipe(zlib.createGunzip()).pipe(output);
+
+
+        return;
+        console.info("downloading", url);
+         
+        var options = {
+          directory: nRequire("path").dirname(file.path),
+          filename: nRequire("path").basename(url)
+        }
+         
+        download(url, options, function(err){
+            if (err) throw err
+            console.log("done!")
+        }) 
+
+      }
+    });
+
+    // var data = ev.dataTransfer.getData("text");
+    // ev.target.appendChild(document.getElementById(data));
+}
+</script>
+</head>
+<body>
+
+<style type="text/css">
+  #div1 {
+    height: 100px;
+    width: 100px;
+    border: 1px solid;
+  }
+</style>
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+  
+</div>
+
+<img id="drag1" src="img_logo.gif" draggable="true"
+ondragstart="drag(event)" width="336" height="69">
+
+</body>
+</html>
