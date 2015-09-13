@@ -12,6 +12,7 @@ app.on("ready", function() {
     }
   });
 
+  mainWindow.openDevTools();
   mainWindow.maximize();
 
   mainWindow.setMenuBarVisibility(false);

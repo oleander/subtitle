@@ -25,6 +25,7 @@
   "dependencies": {
     "download-file": "^0.1.5",
     "electron-packager": "^4.0.0",
+    "promise-settle": "^0.2.0",
     "request": "^2.61.0",
     "subtitler": "^2.4.0",
     "tar-pack": "^2.0.0"

@@ -15,6 +15,7 @@
   var fs = require('fs');
   var path = require("path")
   var url = require("url");
+  var settle = require("promise-settle");
 
   var token = null;
   opensubtitles.api.login().then(function(t){
@@ -25,12 +26,61 @@
     event.preventDefault();
   };
 
+  var searchAndDownload = function(token, lang, query, file_path) {
+    return new Promise(function(accept, reject){
+      console.info([token, lang, query])
+      opensubtitles.api.searchForTitle(token, lang, query).then(function(results){
+        if(!results[0]) { return reject(); }
+        if(results[0]){
+          var downloadUrl = results[0].SubDownloadLink
+          var p = path.dirname(file_path)
+          var u = url.parse(downloadUrl);
+          var request = http.get({ 
+              host: u.host,
+              path: u.path,
+              port: 80
+          });
+          request.on("response", function(response) {
+            var fileData = path.parse(results[0].SubFileName)
+            var output = fs.createWriteStream(p + "/" + fileData.name + "-" + lang + fileData.ext);
+            response.pipe(zlib.createGunzip()).pipe(output);
+          });
+
+          console.info("accept")
+          accept();
+        }
+      }).fail(function(err) {
+        console.info("fail", err)
+        reject()
+      });
+    })
+  }
+
   function drop(ev) {
       loading();
       ev.preventDefault();
       var file = ev.dataTransfer.files[0]
-      var search = path.parse(file.name).name;
-      opensubtitles.api.searchForTitle(token, "eng", search).then(function(results){
+      var query = path.parse(file.name).name;
+      var proms = ["eng", "swe"].map(function(lang) {
+        console.info("search for", lang);
+        return searchAndDownload(token, lang, query, file.path);
+      });
+
+      settle(proms).then(function(results) {
+        console.info("chcking", results)
+        var anyOne = false;
+        results.forEach(function (result) {
+          if (result.isFulfilled()) { anyOne = true; }
+        });
+
+        anyOne ? ok() : no();
+      }).catch(function(e) {
+        console.info("fail", e)
+      })
+
+      return;
+
+      opensubtitles.api.searchForTitle(token, "eng", query).then(function(results){
         if(!results[0]) { return no(); }
         if(results[0]){
           var downloadUrl = results[0].SubDownloadLink
@@ -41,7 +91,7 @@
               path: u.path,
               port: 80
           });
-          request.on('response', function(response) {
+          request.on("response", function(response) {
             var output = fs.createWriteStream(p + "/" + results[0].SubFileName);
             response.pipe(zlib.createGunzip()).pipe(output);
           });
