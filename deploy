@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+APP=Subtitle
+
+echo "Remove old app"
+rm -rf dist/`echo $APP`.app
+
+echo "Remove current build path"
+rm -rf build && mkdir build
+rm -rf dist && mkdir dist
+
+echo "Copy static files to build"
+cp -r css build
+cp -r fonts build
+cp -r js build
+cp main.js build
+cp index.html build
+cp package.json build
+
+echo "Copy packages"
+cp -R node_modules/ build/node_modules/
+
+echo "Build package using electron-packager"
+./node_modules/electron-packager/cli.js build/ `echo $APP` --out=dist/ --version=0.32.2 --icon=icon.icns --prune --platform=darwin --arch=x64 --overwrite
+
+echo "Remove build path"
+# rm -rf build/
+
+echo dist/`echo $APP`.app "has been created"

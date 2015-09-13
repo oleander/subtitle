@@ -12,11 +12,17 @@ app.on("ready", function() {
     }
   });
 
+  // mainWindow.maximize();
+  // mainWindow.openDevTools();
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
   mainWindow.setSkipTaskbar(true);
   mainWindow.setTitle("Subtitle");
   mainWindow.loadUrl("file://" + __dirname + "/index.html");
+
+  mainWindow.on('closed', function() {
+    app.quit();
+  });
 
   var template = [
     {
@@ -35,5 +41,9 @@ app.on("ready", function() {
     },
   ]
   menu = Menu.buildFromTemplate(template);
-  // Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(menu);
+});
+
+app.on("activate-with-no-open-windows", function() {
+  app.quit();
 });
