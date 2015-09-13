@@ -4,16 +4,13 @@ var Menu          = require("menu");
 
 app.on("ready", function() {
   var mainWindow = new BrowserWindow({
-    resizable: true,
+    resizable: false,
     height: 280,
     width: 310,
     "web-preferences": {
       "web-security": false
     }
   });
-
-  mainWindow.openDevTools();
-  mainWindow.maximize();
 
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
