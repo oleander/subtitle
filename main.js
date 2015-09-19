@@ -18,6 +18,7 @@ app.on("ready", function() {
   mainWindow.setAutoHideMenuBar(true);
   mainWindow.setSkipTaskbar(true);
   mainWindow.setTitle("Subtitle");
+  mainWindow.setAlwaysOnTop(true);
   mainWindow.loadUrl("file://" + __dirname + "/index.html");
 
   mainWindow.on('closed', function() {
