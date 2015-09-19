@@ -58,11 +58,7 @@ section, footer, header, aside{
 }
 
 #drop{
-    background-color: #2E3134;
     padding: 40px 50px;
-    border: 20px solid rgba(0, 0, 0, 0);
-    border-radius: 3px;
-    border-image: url('border-image.png') 25 repeat;
     text-align: center;
     text-transform: uppercase;
 

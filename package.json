@@ -18,10 +18,6 @@
     "electron-prebuilt": "*",
     "ember-cli": "*"
   },
-  "window": {
-    "width": 960,
-    "height": 600
-  },
   "dependencies": {
     "promise-settle": "^0.2.0",
     "subtitler": "^2.4.0"

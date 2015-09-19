@@ -120,9 +120,22 @@
   });
 </script>
 
+<style type="text/css">
+  
+  #upload {               
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);    
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+  }
+
+</style>
 </head>
-<body>
-  <div id="upload" ondrop="drop(event)" ondragover="allowDrop(event)">
+<body style="background-color: #313437">
+  <div style="margin: 0 auto" id="upload" ondrop="drop(event)" ondragover="allowDrop(event)">
     <div id="drop">
       <div style="font-size: 25px; margin-bottom: 24px; margin-top: 24px;" id="info">Drop Here</div>
       <i id="ok" class="fa fa-check fa-5x"></i>
