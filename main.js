@@ -5,14 +5,16 @@ var Menu          = require("menu");
 app.on("ready", function() {
   var mainWindow = new BrowserWindow({
     resizable: true,
-    // height: 220,
-    // width: 310,
+    height: 250,
+    width: 310,
     "web-preferences": {
       "web-security": false
-    }
+    },
+    "skip-taskbar": false,
+    "title-bar-style": "hidden"
   });
 
-  mainWindow.maximize();
+  // mainWindow.maximize();
   // mainWindow.openDevTools();
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
@@ -21,7 +23,6 @@ app.on("ready", function() {
   // mainWindow.setAlwaysOnTop(true);
   // mainWindow.loadUrl("file://" + __dirname + "/index.html");
   mainWindow.loadUrl("http://localhost:4200/");
-  mainWindow.openDevTools();
 
 
   mainWindow.on('closed', function() {
