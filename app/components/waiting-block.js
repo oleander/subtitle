@@ -7,7 +7,6 @@ export default Ember.Component.extend({
     self.set("id", id);
   }.on('didInsertElement'),
   clearTimer: function() {
-    console.info("clear")
-    clearTimeout(this.get("id"))
+    clearTimeout(this.get("id"));
   }.on("willDestroyElement")
 });
