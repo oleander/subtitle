@@ -1,4 +1,18 @@
 <div style="font-size: 25px; margin-bottom: 24px; margin-top: 24px;" id="info">
   Drop Here
-</div>
 
+  <div style="font-size: 10px;">
+    {{#if isChangingLang}}
+      {{#change-lang action="setLanguage" selected=currentLangID}}
+        <option value="eng">English</option>
+        <option value="swe">Swedish</option>
+      {{/change-lang}}
+    {{else}}
+      <i>
+        <strong>
+          <a href="#" {{action "changeLang"}}>{{currentLang}}</a>
+        </strong>
+      </i>
+    {{/if}}
+  </div>
+</div>

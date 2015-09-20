@@ -12,7 +12,8 @@ export default  Ember.Controller.extend({
         });
       } else {
         this.transitionToRoute("loading");
-        search(file, "eng").then(function() {
+        var lang = localStorage.getItem("language") || "eng";
+        search(file, lang).then(function() {
           self.transitionToRoute("okay");
         }).catch(function(err) {
           new Notification("Error", { body: err });

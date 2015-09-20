@@ -22,8 +22,8 @@ var searchAndDownload = function(token, lang, query, file_path) {
           var fileData = path.parse(results[0].SubFileName)
           var output = fs.createWriteStream(p + "/" + query + fileData.ext);
           response.pipe(zlib.createGunzip()).pipe(output);
+          accept();
         });
-        accept();
       }
     }).fail(reject);
   })
