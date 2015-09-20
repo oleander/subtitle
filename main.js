@@ -45,7 +45,7 @@ app.on("ready", function() {
     },
   ]
   menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  // Menu.setApplicationMenu(menu);
 });
 
 app.on("activate-with-no-open-windows", function() {

@@ -1,15 +1,19 @@
+import search from "../lib/search";
+
 export default  Ember.Controller.extend({
   actions: {
     fileIsDroped: function(file) {
+      var self = this;
       // Folder?
       if(file.type == "") {
         this.transitionToRoute("not-okay");
       } else {
         this.transitionToRoute("loading");
-        var self = this;
-        setTimeout(function() {
+        search(file, "eng").then(function() {
           self.transitionToRoute("okay");
-        }, 4000);
+        }).catch(function(err) {
+          self.transitionToRoute("not-okay");
+        })
       }
     }
   }
