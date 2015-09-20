@@ -11,11 +11,8 @@
   }
 </style>
 
-<div style="margin: 0 auto" id="upload" ondrop="drop(event)" ondragover="allowDrop(event)">
+{{#drop-area action="fileIsDroped"}}
   <div id="drop">
-    <div style="font-size: 25px; margin-bottom: 24px; margin-top: 24px;" id="info">Drop Here</div>
-    <i id="ok" class="fa fa-check fa-5x"></i>
-    <i id="no" class="fa fa-times fa-5x"></i>
-    <i id="loading" class="spin fa fa-spinner fa-5x"></i>
+    {{outlet}}
   </div>
-</div>
+{{/drop-area}}
