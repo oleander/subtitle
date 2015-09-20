@@ -4,22 +4,25 @@ var Menu          = require("menu");
 
 app.on("ready", function() {
   var mainWindow = new BrowserWindow({
-    resizable: false,
-    height: 220,
-    width: 310,
+    resizable: true,
+    // height: 220,
+    // width: 310,
     "web-preferences": {
       "web-security": false
     }
   });
 
-  // mainWindow.maximize();
+  mainWindow.maximize();
   // mainWindow.openDevTools();
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
   mainWindow.setSkipTaskbar(true);
   mainWindow.setTitle("Subtitle");
-  mainWindow.setAlwaysOnTop(true);
-  mainWindow.loadUrl("file://" + __dirname + "/index.html");
+  // mainWindow.setAlwaysOnTop(true);
+  // mainWindow.loadUrl("file://" + __dirname + "/index.html");
+  mainWindow.loadUrl("http://localhost:4200/");
+  mainWindow.openDevTools();
+
 
   mainWindow.on('closed', function() {
     app.quit();
