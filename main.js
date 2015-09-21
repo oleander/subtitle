@@ -14,8 +14,8 @@ app.on("ready", function() {
     "title-bar-style": "hidden"
   });
 
-  // mainWindow.maximize();
-  // mainWindow.openDevTools();
+  mainWindow.maximize();
+  mainWindow.openDevTools();
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
   mainWindow.setSkipTaskbar(true);

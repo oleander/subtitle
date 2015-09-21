@@ -1,6 +1,6 @@
-/*-------------------------
-    Simple reset
---------------------------*/
+a.no-style {
+  text-decoration: none;
+}
 
 .hidden {
   display: none;
@@ -24,11 +24,6 @@ h1 {
     margin:0;
     padding:0;
 }
-
-
-/*-------------------------
-    General Styles
---------------------------*/
 
 body{
     font:15px/1.3 Arial, sans-serif;
