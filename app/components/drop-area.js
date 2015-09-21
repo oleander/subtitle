@@ -6,5 +6,6 @@ export default Ember.Component.extend({
   },
   dragOver: function(event) {
     event.preventDefault();
+    event.originalEvent.dataTransfer.dropEffect = "copy";
   }
 });

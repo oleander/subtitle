@@ -49,10 +49,10 @@ section, footer, header, aside{
     padding: 40px 50px;
     text-align: center;
     text-transform: uppercase;
-
     font-size:16px;
     font-weight:bold;
     color:#7f858a;
+    cursor: copy;
 }
 
 #drop a{

@@ -36,10 +36,11 @@
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "^2.0.0",
     "ember-disable-proxy-controllers": "^1.0.0",
-    "ember-export-application-global": "^1.0.3"
+    "ember-export-application-global": "^1.0.3",
+    "electron-packager": "*",
+    "electron-prebuilt": "^0.33.0"
   },
   "dependencies": {
-    "electron-prebuilt": "^0.33.0",
     "subtitler": "^2.4.0"
   }
 }

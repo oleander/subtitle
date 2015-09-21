@@ -18,8 +18,8 @@ cp -r public/ build/public
 cp package.json build
 
 echo "Install packages"
-# npm install --prefix ./build --production
-cp -R node_modules/ build/node_modules/
+npm install --prefix ./build --production
+# cp -R node_modules/ build/node_modules/
 
 echo "Build package using electron-packager"
 ./node_modules/electron-packager/cli.js build/ `echo $APP` --out=dist/ --version=0.25.3 --icon=icon.icns --platform=darwin --arch=x64 --overwrite

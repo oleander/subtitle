@@ -11,7 +11,7 @@ app.on("ready", function() {
     },
     "skip-taskbar": false,
     "title-bar-style": "hidden",
-    frame: false
+    frame: true
   });
 
   mainWindow.maximize();
@@ -48,7 +48,7 @@ app.on("ready", function() {
       click: function() { app.quit(); }
     },
   ]
-  menu = Menu.buildFromTemplate(template);
+  // menu = Menu.buildFromTemplate(template);
   // Menu.setApplicationMenu(menu);
 });
 
