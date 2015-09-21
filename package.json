@@ -1,7 +1,7 @@
 {
   "name": "subtitle",
   "version": "0.0.0",
-  "description": "Small description for never-again goes here",
+  "description": "Subtitle GUI for opensubtitles.org",
   "private": true,
   "directories": {
     "doc": "doc",

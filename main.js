@@ -4,44 +4,47 @@ var Menu          = require("menu");
 
 app.on("ready", function() {
   var mainWindow = new BrowserWindow({
-    resizable: true,
     height: 250,
     width: 310,
     "web-preferences": {
       "web-security": false
     },
     "skip-taskbar": false,
-    "title-bar-style": "hidden"
+    "title-bar-style": "hidden",
+    frame: false
   });
 
   mainWindow.maximize();
   mainWindow.openDevTools();
+  mainWindow.loadUrl("http://localhost:4200/");
+
+  // mainWindow.setAlwaysOnTop(true);
+  // mainWindow.setResizable(false);
+  // mainWindow.loadUrl("file://" + __dirname + "/index.html");
+
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
   mainWindow.setSkipTaskbar(true);
   mainWindow.setTitle("Subtitle");
-  // mainWindow.setAlwaysOnTop(true);
-  // mainWindow.loadUrl("file://" + __dirname + "/index.html");
-  mainWindow.loadUrl("http://localhost:4200/");
 
 
-  mainWindow.on('closed', function() {
+  mainWindow.on("closed", function() {
     app.quit();
   });
 
   var template = [
     {
-      label: 'Subtitle',
+      label: "Subtitle",
       submenu: [
         {
-          label: 'About Subtitle',
-          selector: 'orderFrontStandardAboutPanel:'
+          label: "About Subtitle",
+          selector: "orderFrontStandardAboutPanel:"
         }
       ]
     },
     {
-      label: 'Quit',
-      accelerator: 'Command+Q',
+      label: "Quit",
+      accelerator: "Command+Q",
       click: function() { app.quit(); }
     },
   ]

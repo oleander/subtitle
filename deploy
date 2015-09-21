@@ -6,24 +6,27 @@ echo "Remove old app"
 rm -rf dist/`echo $APP`.app
 
 echo "Remove current build path"
-rm -rf build && mkdir build
-rm -rf dist && mkdir dist
+rm -rf build
+
+echo "Generate static files"
+ember build --environment=production --output-path=build/
 
 echo "Copy static files to build"
-cp -r css build
-cp -r fonts build
-cp -r js build
-cp main.js build
-cp index.html build
+cp package.json main.js build
+echo "mode=production" > "build/environment"
+cp -r public/ build/public
 cp package.json build
 
-echo "Copy packages"
+echo "Install packages"
+# npm install --prefix ./build --production
 cp -R node_modules/ build/node_modules/
 
 echo "Build package using electron-packager"
-./node_modules/electron-packager/cli.js build/ `echo $APP` --out=dist/ --version=0.32.2 --icon=icon.icns --prune --platform=win32 --arch=x64 --overwrite
+./node_modules/electron-packager/cli.js build/ `echo $APP` --out=dist/ --version=0.25.3 --icon=icon.icns --platform=darwin --arch=x64 --overwrite
 
 echo "Remove build path"
 # rm -rf build/
 
 echo dist/`echo $APP`.app "has been created"
+
+osascript -e 'display notification "Deploy has finished" with title "Deploy"'
