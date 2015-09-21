@@ -11,16 +11,16 @@ app.on("ready", function() {
     },
     "skip-taskbar": false,
     "title-bar-style": "hidden",
-    frame: true
+    frame: false
   });
 
-  mainWindow.maximize();
-  mainWindow.openDevTools();
-  mainWindow.loadUrl("http://localhost:4200/");
+  // mainWindow.maximize();
+  // mainWindow.openDevTools();
+  // mainWindow.loadUrl("http://localhost:4200/");
 
-  // mainWindow.setAlwaysOnTop(true);
-  // mainWindow.setResizable(false);
-  // mainWindow.loadUrl("file://" + __dirname + "/index.html");
+  mainWindow.setAlwaysOnTop(true);
+  mainWindow.setResizable(false);
+  mainWindow.loadUrl("file://" + __dirname + "/index.html");
 
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
