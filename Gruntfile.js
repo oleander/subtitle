@@ -85,12 +85,8 @@ module.exports = function(grunt) {
           execute("./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=0.33.0 --icon=icon.icns --platform=all --arch=all --overwrite").then(function(){
             console.info("Remove build path");
             execute("rm -rf build/").then(function(){
-              execute("osascript -e 'display notification \"Deploy has finished\" with title \"Deploy\"'").then(function(){
-                console.info("Done!");
-                done();
-              }).catch(function(err){
-                console.info("Could not notify", err);
-              })
+              console.info("Done!");
+              done();
             }).catch(function(err){
               console.info("Could not clean upp", err);
               done();
