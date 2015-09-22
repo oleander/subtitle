@@ -73,7 +73,7 @@ module.exports = function(grunt) {
   grunt.registerTask("build", "Build releases", function() {
     var done = this.async();
     console.info("Run ember build");
-    execute("ember build --environment=production --output-path=build/").then(function(){
+    execute("rm -rf build/ && mkdir build/ && ember build --environment=production --output-path=build/").then(function(){
       console.info("Copy files");
       var p = [];
       p.push(execute("cp package.json main.js build"))
@@ -82,7 +82,7 @@ module.exports = function(grunt) {
       Promise.all(p).then(function(){
         execute("npm install --prefix ./build --production").then(function(){
           console.info("Building binaries");
-          execute("./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=0.33.0 --icon=icon.icns --platform=all --arch=all --overwrite").then(function(){
+          execute("rm -rf dist/ && ./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=0.33.0 --icon=icon.icns --platform=all --arch=all --overwrite").then(function(){
             console.info("Remove build path");
             execute("rm -rf build/").then(function(){
               console.info("Done!");
