@@ -1,5 +1,8 @@
 {
   "v1.0.0": {
     "description": "First release"
+  },
+  "v1.0.1": {
+    "description": "Display loading bar until subtitle has been downloaded"
   }
 }
