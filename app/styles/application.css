@@ -16,6 +16,10 @@ a.no-style {
    transform: translate(-50%, -50%);
 }
 
+.option-box {
+    height: 50px;
+}
+
 h1 {
   font-size: 30px; 
 }
