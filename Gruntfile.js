@@ -1,5 +1,9 @@
 module.exports = function(grunt) {
+  var electronVersion = "0.33.0";
   var appName = "Subtitle";
+  var platform = "all";
+  var arch = "all";
+  
   var version = require("./package.json").version;
   var releases = require("./releases.json");
   var walk = require("walkdir");
@@ -52,15 +56,14 @@ module.exports = function(grunt) {
     }
 
     execute("git tag " + tag).then(function(){
-      console.info("Creating release");
+      grunt.log.ok("Creating release");
       return execute("github-release release --user oleander --repo subtitle --tag " + tag + " --name '" + tag + "' --description '" + getRelease(tag).description + "'");
     }).then(function(){
       walk("./dist", { no_recurse: true }).on("directory", function(folder, _, next){
         var name = path.parse(folder).base + "-" + tag + ".zip";
-        var zipFile = folder + ".zip"
-        execute("zip -o -q --symlinks -r '" + zipFile + "' '" + folder + "'").then(function(){
-          console.info("Upload", zipFile);
-          return execute("github-release upload --user oleander --repo subtitle --tag " + tag + " --name '" + name + "' --file '" + zipFile + "'");
+        execute("cd dist && zip -o -q --symlinks -r '" + name + "' '" + folder + "'").then(function(){
+          grunt.log.ok("Upload", name);
+          return execute("github-release upload --user oleander --repo subtitle --tag " + tag + " --name '" + name + "' --file 'dist/" + name + "'");
         }).then(next).catch(function(err){
           grunt.fail.fatal(err);
         });
@@ -72,9 +75,9 @@ module.exports = function(grunt) {
   
   grunt.registerTask("build", "Build releases", function() {
     var done = this.async();
-    console.info("Run ember build");
+    grunt.log.ok("Run ember build");
     execute("rm -rf build/ && mkdir build/ && ember build --environment=production --output-path=build/").then(function(){
-      console.info("Copy files");
+      grunt.log.ok("Copy files");
       var p = [];
       p.push(execute("cp package.json main.js build"));
       p.push(execute("cp -r public/ build/public"));
@@ -83,13 +86,13 @@ module.exports = function(grunt) {
     }).then(function(){
       return execute("npm install --prefix ./build --production");
     }).then(function(){
-      console.info("Building binaries");
-      return execute("rm -rf dist/ && ./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=0.33.0 --icon=icon.icns --platform=all --arch=all --overwrite");
+      grunt.log.ok("Building binaries");
+      return execute("rm -rf dist/ && ./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=" + electronVersion + " --icon=icon.icns --platform=" + platform + " --arch=" + arch + " --overwrite");
     }).then(function(){
-      console.info("Remove build path");
+      grunt.log.ok("Remove build path");
       return execute("rm -rf build/");
     }).then(function(){
-      console.info("Done!");
+      grunt.log.ok("Done!");
       done();
     }).catch(function(err) {
       grunt.fail.fatal("Failed", err);
