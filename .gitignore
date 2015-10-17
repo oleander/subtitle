@@ -1,0 +1,10 @@
+.bowerrc
+.editorconfig
+.ember-cli
+.jshintrc
+.travis.yml
+.watchmanconfig
+bower_components/
+dist/
+node_modules/
+tmp/
