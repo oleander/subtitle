@@ -60,8 +60,9 @@ module.exports = function(grunt) {
       return execute("github-release release --user oleander --repo subtitle --tag " + tag + " --name '" + tag + "' --description '" + getRelease(tag).description + "'");
     }).then(function(){
       walk("./dist", { no_recurse: true }).on("directory", function(folder, _, next){
-        var name = path.parse(folder).base + "-" + tag + ".zip";
-        execute("cd dist && zip -o -q --symlinks -r '" + name + "' '" + folder + "'").then(function(){
+        var base = path.parse(folder).base;
+        var name = base + "-" + tag + ".zip";
+        execute("cd dist && zip -o -q --symlinks -r '" + name + "' '" + base + "'").then(function(){
           grunt.log.ok("Upload", name);
           return execute("github-release upload --user oleander --repo subtitle --tag " + tag + " --name '" + name + "' --file 'dist/" + name + "'");
         }).then(next).catch(function(err){
