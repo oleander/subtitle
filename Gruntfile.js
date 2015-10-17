@@ -56,7 +56,7 @@ module.exports = function(grunt) {
       return execute("github-release release --user oleander --repo subtitle --tag " + tag + " --name '" + tag + "' --description '" + getRelease(tag).description + "'");
     }).then(function(){
       walk("./dist", { no_recurse: true }).on("directory", function(folder, _, next){
-        var name = path.parse(folder).base + "-" + tag;
+        var name = path.parse(folder).base + "-" + tag + ".zip";
         var zipFile = folder + ".zip"
         execute("zip -o -q --symlinks -r '" + zipFile + "' '" + folder + "'").then(function(){
           console.info("Upload", zipFile);
