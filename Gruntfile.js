@@ -1,5 +1,13 @@
 module.exports = function(grunt) {
   var appName = "Subtitle";
+  var version = require("./package.json").version;
+  var releases = require("./releases.json");
+  var walk = require("walkdir");
+  var path = require("path");
+
+  if(!process.env.GITHUB_TOKEN) {
+    return grunt.fail.fatal("GITHUB_TOKEN not set");
+  }
 
   var execute = function(cmd) {
     var exec = require("child_process").exec;
@@ -13,60 +21,52 @@ module.exports = function(grunt) {
           accept(stderr);
         }
       });
-    })
+    });
+  }
+
+  var zipFolder = function (filename) {
+    return new Promise(function(accept, reject) {
+      var stat = path.parse(filename)
+      var zipFile = path.join(stat.dir, stat.base + ".zip");
+      zipdir(filename, { saveTo: zipFile }, function (err, buffer) {
+        err ? reject(err) : accept(zipFile, stat.base);
+      });
+    });
+  }
+
+  var getRelease = function(version){
+    var res = releases[version]
+    if(!res) {
+      throw "release " + version + " not found";
+    }
+
+    return res;
   }
 
   grunt.registerTask("release", "Publishes pre-builds on github", function() {
-    var releases = require("./releases.json");
+    var tag = "v" + version;
     var done = this.async();
-    var walk = require("walkdir");
-    var zipdir = require("zip-dir");
-    var path = require("path");
 
-    var zipFolder = function (filename) {
-      return new Promise(function(accept, reject) {
-        var stat = path.parse(filename)
-        var zipFile = path.join(stat.dir, stat.base + ".zip");
-        zipdir(filename, { saveTo: zipFile }, function (err, buffer) {
-          err ? reject(err) : accept(zipFile, stat.base);
-        });
-      });
+    if(!releases[tag]) {
+      return grunt.fail.fatal("Release '" + tag + "' in releases.json could not be found");
     }
 
-    var getRelease = function(version){
-      var res = releases[version]
-      if(!res) {
-        throw "release " + version + " not found";
-      }
-
-      return res;
-    }
-
-    execute("git tag | tail -n 1").then(function(raw){
-      var tag = raw.trim();
+    execute("git tag " + tag).then(function(){
       console.info("Creating release");
-      execute("github-release release --user oleander --repo subtitle --tag " + tag + " --name '" + tag + "' --description '" + getRelease(tag).description + "'").then(function(){
-        var emitter = walk('./dist', { no_recurse: true });
-        emitter.on("directory", function(filename){
-          zipFolder(filename).then(function(zipFile){
-            console.info("Upload", zipFile);
-            var name = path.parse(zipFile).base;
-            execute("github-release upload --user oleander --repo subtitle --tag " + tag + " --name '" + name + "' --file '" + zipFile + "'").then(function(){
-              console.info(name + " has been uploaded");
-            }).catch(function(err){
-              console.info("Could not upload " + name);
-            });
-          }).catch(function(err) {
-            console.info("Could not zip", err);
-          });
+      return execute("github-release release --user oleander --repo subtitle --tag " + tag + " --name '" + tag + "' --description '" + getRelease(tag).description + "'");
+    }).then(function(){
+      walk("./dist", { no_recurse: true }).on("directory", function(folder, _, next){
+        var name = path.parse(folder).base + "-" + tag;
+        var zipFile = folder + ".zip"
+        execute("zip -o -q --symlinks -r '" + zipFile + "' '" + folder + "'").then(function(){
+          console.info("Upload", zipFile);
+          return execute("github-release upload --user oleander --repo subtitle --tag " + tag + " --name '" + name + "' --file '" + zipFile + "'");
+        }).then(next).catch(function(err){
+          grunt.fail.fatal(err);
         });
-
-        console.info("Release " + tag + " has been created");
-      }).catch(function(err){
-        console.info("Could not create release");
       });
     }).catch(function(err) {
-      console.info("Could not find tag", err);
+      grunt.fail.fatal(err);
     });
   }); 
   
@@ -76,35 +76,23 @@ module.exports = function(grunt) {
     execute("rm -rf build/ && mkdir build/ && ember build --environment=production --output-path=build/").then(function(){
       console.info("Copy files");
       var p = [];
-      p.push(execute("cp package.json main.js build"))
-      p.push(execute("cp -r public/ build/public"))
-      p.push(execute("cp package.json build"))
-      Promise.all(p).then(function(){
-        execute("npm install --prefix ./build --production").then(function(){
-          console.info("Building binaries");
-          execute("rm -rf dist/ && ./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=0.33.0 --icon=icon.icns --platform=all --arch=all --overwrite").then(function(){
-            console.info("Remove build path");
-            execute("rm -rf build/").then(function(){
-              console.info("Done!");
-              done();
-            }).catch(function(err){
-              console.info("Could not clean upp", err);
-              done();
-            });
-          }).catch(function(err) {
-            console.info("Could not build binaries", err);
-            done();
-          });
-        }).catch(function(err){
-          console.info("Could not run npm install", err);
-          done();
-        });
-      }).catch(function(err) {
-        console.info("Could not copy files");
-        done();
-      });
+      p.push(execute("cp package.json main.js build"));
+      p.push(execute("cp -r public/ build/public"));
+      p.push(execute("cp package.json build"));
+      return Promise.all(p);
+    }).then(function(){
+      return execute("npm install --prefix ./build --production");
+    }).then(function(){
+      console.info("Building binaries");
+      return execute("rm -rf dist/ && ./node_modules/electron-packager/cli.js build/ " + appName + " --out=dist/ --version=0.33.0 --icon=icon.icns --platform=all --arch=all --overwrite");
+    }).then(function(){
+      console.info("Remove build path");
+      return execute("rm -rf build/");
+    }).then(function(){
+      console.info("Done!");
+      done();
     }).catch(function(err) {
-      console.info("Failed to run ember build", err);
+      grunt.fail.fatal("Failed", err);
       done();
     });
   });
