@@ -44,6 +44,7 @@
     "zip-folder": "^1.0.0"
   },
   "dependencies": {
-    "subtitler": "^2.4.0"
+    "subtitler": "^2.4.0",
+    "wuzzy": "^0.1.2"
   }
 }
