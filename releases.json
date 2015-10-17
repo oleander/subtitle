@@ -4,5 +4,8 @@
   },
   "v1.0.1": {
     "description": "Display loading bar until subtitle has been downloaded"
+  },
+  "v1.0.2": {
+    "description": "Better subtitle match using the levenshtein algorithm"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "subtitle",
-  "version": "0.0.0",
+  "version": "1.0.2",
   "description": "Subtitle GUI for opensubtitles.org",
   "private": true,
   "directories": {
@@ -39,9 +39,7 @@
     "ember-export-application-global": "^1.0.3",
     "grunt": "^0.4.5",
     "walk": "^2.3.9",
-    "walkdir": "0.0.10",
-    "zip-dir": "^1.0.0",
-    "zip-folder": "^1.0.0"
+    "walkdir": "0.0.10"
   },
   "dependencies": {
     "subtitler": "^2.4.0",
